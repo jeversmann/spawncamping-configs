@@ -1,5 +1,26 @@
 ENV['HOMEBREW_CASK_OPTS'] = "--appdir=/Applications"
 
+# Some stuff from Stack Overflow to detect OS
+module OS
+  def class << self
+    def windows?
+      (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+    end
+
+    def mac?
+      (/darwin/ =~ RUBY_PLATFORM) != nil
+    end
+
+    def unix?
+      !windows?
+    end
+
+    def linux?
+      unix? and not mac?
+    end
+  end
+end
+
 def brew_install(package, *args)
   versions = `brew list #{package} --versions`
   options = args.last.is_a?(Hash) ? args.pop : {}
@@ -174,7 +195,6 @@ namespace :install do
     brew_install 'zsh'
 
     sh 'git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh' unless Dir.exist? "#{Dir.home}/.oh-my-zsh"
-    link_file 'zshrc', '~/.zshrc'
   end
 
   desc 'Install MacVim'
@@ -223,6 +243,7 @@ end
 COPIED_FILES = filemap(
   'vimrc.local'         => '~/.vimrc.local',
   'vimrc.bundles.local' => '~/.vimrc.bundles.local',
+  'zshrc.local'         => '~/.zshrc.local',
   'tmux.conf.local'     => '~/.tmux.conf.local'
 )
 
@@ -230,23 +251,47 @@ LINKED_FILES = filemap(
   'vim'           => '~/.vim',
   'tmux.conf'     => '~/.tmux.conf',
   'vimrc'         => '~/.vimrc',
+  'zshrc'         => '~/.zshrc',
   'vimrc.bundles' => '~/.vimrc.bundles'
 )
 
 desc 'Install these config files.'
 task :install do
+  if OS.windows?
+    puts
+    puts 'Currently, installation is not supported on Windows'
+    puts
+    return
+  end
+
+  # Need to make sure brew is available, possible include installation
+
+  puts
+  puts 'Ensuring general tools are around to be configured'
+  puts
+
   Rake::Task['install:brew'].invoke
   Rake::Task['install:brew_cask'].invoke
   Rake::Task['install:the_silver_searcher'].invoke
-  Rake::Task['install:iterm'].invoke
   Rake::Task['install:ctags'].invoke
-  Rake::Task['install:reattach_to_user_namespace'].invoke
   Rake::Task['install:tmux'].invoke
-  Rake::Task['install:macvim'].invoke
   Rake::Task['install:zsh'].invoke
 
-  # TODO install gem ctags?
-  # TODO run gem ctags?
+  if OS.mac?
+    puts
+    puts 'Installing OSX specific tools'
+    puts
+
+    Rake::Task['install:iterm'].invoke
+    Rake::Task['install:reattach_to_user_namespace'].invoke
+    Rake::Task['install:macvim'].invoke
+  end
+
+  if OS.linux? && false # I don't think there are any?
+    puts
+    puts 'Installing Linux specific tools'
+    puts
+  end
 
   step 'symlink'
 
@@ -261,23 +306,8 @@ task :install do
   # Install Vundle and bundles
   Rake::Task['install:vundle'].invoke
 
-  step 'iterm2 colorschemes'
-  colorschemes = `defaults read com.googlecode.iterm2 'Custom Color Presets'`
-  dark  = colorschemes !~ /Solarized Dark/
-  light = colorschemes !~ /Solarized Light/
-  sh('open', '-a', '/Applications/iTerm.app', File.expand_path('iterm2-colors-solarized/Solarized Dark.itermcolors')) if dark
-  sh('open', '-a', '/Applications/iTerm.app', File.expand_path('iterm2-colors-solarized/Solarized Light.itermcolors')) if light
-
-  step 'iterm2 profiles'
   puts
-  puts "  Your turn!"
-  puts
-  puts "  Go and manually set up Solarized Light and Dark profiles in iTerm2."
-  puts "  (You can do this in 'Preferences' -> 'Profiles' by adding a new profile,"
-  puts "  then clicking the 'Colors' tab, 'Load Presets...' and choosing a Solarized option.)"
-  puts "  Also be sure to set Terminal Type to 'xterm-256color' in the 'Terminal' tab."
-  puts
-  puts "  Enjoy!"
+  puts "Enjoy!"
   puts
 end
 
@@ -299,17 +329,22 @@ task :uninstall do
   puts
   puts 'Manually uninstall homebrew if you wish: https://gist.github.com/mxcl/1173223.'
 
-  step 'iterm2'
-  puts
-  puts 'Run this to uninstall iTerm:'
-  puts
-  puts '  rm -rf /Applications/iTerm.app'
+  if OS.mac?
+    step 'iterm2'
+    puts
+    puts 'Run this to uninstall iTerm:'
+    puts
+    puts '  rm -rf /Applications/iTerm.app'
 
-  step 'macvim'
-  puts
-  puts 'Run this to uninstall MacVim:'
-  puts
-  puts '  rm -rf /Applications/MacVim.app'
+    step 'macvim'
+    puts
+    puts 'Run this to uninstall MacVim:'
+    puts
+    puts '  rm -rf /Applications/MacVim.app'
+  end
+
+  if OS.linux?
+  end
 end
 
 task :default => :install
