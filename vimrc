@@ -81,7 +81,7 @@ nmap <leader>] :TagbarToggle<CR>
 nmap <leader><space> :call whitespace#strip_trailing()<CR>
 nmap <leader>g :GitGutterToggle<CR>
 " unhighlight everything
-nmap <leader>hl :let @/ = ""<CR>
+nmap <leader>h :let @/ = ""<CR>
 " don't copy the contents of an overwritten selection.
 vnoremap p "_dP
 " in case you forgot to sudo

@@ -174,7 +174,6 @@ namespace :install do
     brew_install 'zsh'
 
     sh 'git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh' unless Dir.exist? "#{Dir.home}/.oh-my-zsh"
-    link_file 'zshrc', '~/.zshrc'
   end
 
   desc 'Install MacVim'
@@ -223,13 +222,14 @@ end
 COPIED_FILES = filemap(
   'vimrc.local'         => '~/.vimrc.local',
   'vimrc.bundles.local' => '~/.vimrc.bundles.local',
+  'zshrc.local'         => '~/.zshrc.local',
   'tmux.conf.local'     => '~/.tmux.conf.local'
 )
 
 LINKED_FILES = filemap(
-  'vim'           => '~/.vim',
+  'vimrc'           => '~/.vimrc',
   'tmux.conf'     => '~/.tmux.conf',
-  'vimrc'         => '~/.vimrc',
+  'zshrc'         => '~/.zshrc',
   'vimrc.bundles' => '~/.vimrc.bundles'
 )
 
