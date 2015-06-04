@@ -76,6 +76,7 @@ nmap <leader>d :NERDTreeToggle<CR>
 nmap <leader>f :NERDTreeFind<CR>
 nmap <leader>s :TSlime<space>
 nmap <leader>t :CtrlP<CR>
+nmap <leader>k :Kwbd<CR>
 nmap <leader>T :CtrlPClearCache<CR>:CtrlP<CR>
 nmap <leader>] :TagbarToggle<CR>
 nmap <leader><space> :call whitespace#strip_trailing()<CR>

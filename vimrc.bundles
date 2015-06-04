@@ -18,6 +18,7 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'vim-scripts/Align'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+Plugin 'rgarver/Kwbd.vim'
 
 " External tool integration
 Plugin 'xaviershay/tslime.vim'
