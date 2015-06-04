@@ -1,1 +1,4 @@
 # Add your machine-specific zsh config here
+
+# Useful for a Mac
+alias mvim="open -a MacVim.app"

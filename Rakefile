@@ -1,5 +1,3 @@
-ENV['HOMEBREW_CASK_OPTS'] = "--appdir=/Applications"
-
 def brew_install(package, *args)
   versions = `brew list #{package} --versions`
   options = args.last.is_a?(Hash) ? args.pop : {}
@@ -26,13 +24,6 @@ def install_github_bundle(user, package)
   unless File.exist? File.expand_path("~/.vim/bundle/#{package}")
     sh "git clone https://github.com/#{user}/#{package} ~/.vim/bundle/#{package}"
   end
-end
-
-def brew_cask_install(package, *options)
-  output = `brew cask info #{package}`
-  return unless output.include?('Not installed')
-
-  sh "brew cask install #{package} #{options.join ' '}"
 end
 
 def step(description)
@@ -124,17 +115,6 @@ namespace :install do
     end
   end
 
-  desc 'Install Homebrew Cask'
-  task :brew_cask do
-    step 'Homebrew Cask'
-    system('brew untap phinze/cask') if system('brew tap | grep phinze/cask > /dev/null')
-    unless system('brew tap | grep caskroom/cask > /dev/null') || system('brew tap caskroom/homebrew-cask')
-      abort "Failed to tap caskroom/homebrew-cask in Homebrew."
-    end
-
-    brew_install 'brew-cask'
-  end
-
   desc 'Install The Silver Searcher'
   task :the_silver_searcher do
     step 'the_silver_searcher'
@@ -145,7 +125,7 @@ namespace :install do
   task :iterm do
     step 'iterm2'
     unless app? 'iTerm'
-      brew_cask_install 'iterm2'
+      brew_install 'iterm2'
     end
   end
 
@@ -180,7 +160,7 @@ namespace :install do
   task :macvim do
     step 'MacVim'
     unless app? 'MacVim'
-      brew_cask_install 'macvim'
+      brew_install 'macvim'
     end
 
     bin_dir = File.expand_path('~/bin')
@@ -236,7 +216,6 @@ LINKED_FILES = filemap(
 desc 'Install these config files.'
 task :install do
   Rake::Task['install:brew'].invoke
-  Rake::Task['install:brew_cask'].invoke
   Rake::Task['install:the_silver_searcher'].invoke
   Rake::Task['install:iterm'].invoke
   Rake::Task['install:ctags'].invoke
