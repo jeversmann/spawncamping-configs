@@ -20,11 +20,20 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 alias be="bundle exec"
 alias sp="bundle exec rspec -c"
 alias ss="bundle exec rails server"
+
+alias gs="git status"
+alias ga="git add"
+alias gcm="git commit -m"
+alias gcam="git commit -am"
+alias gcaa="git commit -a --amend"
+
+alias l="ls -ltrh"
+alias la="ls -ltrAh"
 alias q="exit"
 
 # Extra path lines
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PATH="$PATH:$HOME/.rvm/bin"
 
-source ~/.zhsrc.local
+source ~/.zshrc.local
