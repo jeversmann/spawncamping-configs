@@ -1,6 +1,6 @@
 # Some stuff from Stack Overflow to detect OS
 module OS
-  def class << self
+  class << self
     def windows?
       (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
     end
@@ -23,12 +23,9 @@ def brew_install(package, *args)
   versions = `brew list #{package} --versions`
   options = args.last.is_a?(Hash) ? args.pop : {}
 
-  # if brew exits with error we install tmux
   if versions.empty?
     sh "brew install #{package} #{args.join ' '}"
   elsif options[:requires]
-    # brew did not error out, verify tmux is greater than 1.8
-    # e.g. brew_tmux_query = 'tmux 1.9a'
     installed_version = versions.split(/\n/).first.split(' ')[1]
     unless version_match?(options[:version], installed_version)
       sh "brew upgrade #{package} #{args.join ' '}"
@@ -131,8 +128,9 @@ namespace :install do
   desc 'Update or Install Brew'
   task :brew do
     step 'Homebrew'
-    unless system('which brew > /dev/null || ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"')
-      raise "Homebrew must be installed before continuing."
+    unless system('which brew > /dev/null')
+      `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"` if OS.mac?
+      `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install)"` if OS.linux?
     end
   end
 
@@ -177,31 +175,16 @@ namespace :install do
     sh 'git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh' unless Dir.exist? "#{Dir.home}/.oh-my-zsh"
   end
 
-  desc 'Install MacVim'
-  task :macvim do
-    step 'MacVim'
-    unless app? 'MacVim'
-      brew_install 'macvim'
-    end
-
-    bin_dir = File.expand_path('~/bin')
-    bin_vim = File.join(bin_dir, 'vim')
-    unless ENV['PATH'].split(':').include?(bin_dir)
-      puts 'Please add ~/bin to your PATH, e.g. run this command:'
-      puts
-      puts %{  echo 'export PATH="~/bin:$PATH"' >> ~/.bashrc}
-      puts
-      puts 'The exact command and file will vary by your shell and configuration.'
-    end
-
-    FileUtils.mkdir_p(bin_dir)
-    unless File.executable?(bin_vim)
-      File.open(bin_vim, 'w', 0744) do |io|
-        io << <<-SHELL
-#!/bin/bash
-exec /Applications/MacVim.app/Contents/MacOS/Vim "$@"
-        SHELL
+  desc 'Install Vim'
+  task :vim do
+    if OS.mac?
+      step 'MacVim'
+      unless app? 'MacVim'
+        brew_install 'macvim'
       end
+    elsif OS.linux?
+      step 'Vim'
+      brew_install 'vim'
     end
   end
 
@@ -209,7 +192,15 @@ exec /Applications/MacVim.app/Contents/MacOS/Vim "$@"
   task :vundle do
     step 'vundle'
     install_github_bundle 'gmarik','vundle'
-    sh '~/bin/vim -c "PluginInstall!" -c "q" -c "q"'
+    sh 'vim -c "PluginInstall!" -c "q" -c "q"'
+  end
+
+  desc 'Install RVM'
+  task :rvm do
+    step 'rvm'
+    # Not sure if this key line will go out of date
+    sh 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'
+    sh '\curl -sSL https://get.rvm.io | bash'
   end
 end
 
@@ -228,7 +219,7 @@ COPIED_FILES = filemap(
 )
 
 LINKED_FILES = filemap(
-  'vimrc'           => '~/.vimrc',
+  'vimrc'         => '~/.vimrc',
   'tmux.conf'     => '~/.tmux.conf',
   'zshrc'         => '~/.zshrc',
   'vimrc.bundles' => '~/.vimrc.bundles'
@@ -252,8 +243,10 @@ task :install do
   Rake::Task['install:brew'].invoke
   Rake::Task['install:the_silver_searcher'].invoke
   Rake::Task['install:ctags'].invoke
+  Rake::Task['install:vim'].invoke
   Rake::Task['install:tmux'].invoke
   Rake::Task['install:zsh'].invoke
+  Rake::Task['install:rvm'].invoke
 
   if OS.mac?
     puts
@@ -262,7 +255,6 @@ task :install do
 
     Rake::Task['install:iterm'].invoke
     Rake::Task['install:reattach_to_user_namespace'].invoke
-    Rake::Task['install:macvim'].invoke
   end
 
   if OS.linux? && false # I don't think there are any?
