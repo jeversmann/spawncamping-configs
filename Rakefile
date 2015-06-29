@@ -129,14 +129,24 @@ namespace :install do
   task :brew do
     step 'Homebrew'
     unless system('which brew > /dev/null')
-      `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"` if OS.mac?
-      `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install)"` if OS.linux?
+      if OS.mac? # untested
+        `yes | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+      elsif OS.linux?
+        `sudo apt-get install build-essential curl`
+        `yes | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install)"`
+        `export PATH="$HOME/.linuxbrew/bin:$PATH"`
+        `export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"`
+        `export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"`
+        `brew doctor`
+      end
     end
   end
 
   desc 'Install The Silver Searcher'
   task :the_silver_searcher do
     step 'the_silver_searcher'
+    # Dependancies that aren't included automatically
+    `sudo apt-get install m4 zlib1g-dev`
     brew_install 'the_silver_searcher'
   end
 
@@ -170,6 +180,7 @@ namespace :install do
   desc 'Install oh-my-zsh'
   task :zsh do
     step 'oh-my-zsh'
+    `sudo apt-get install texinfo`
     brew_install 'zsh'
 
     sh 'git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh' unless Dir.exist? "#{Dir.home}/.oh-my-zsh"
