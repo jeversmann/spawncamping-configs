@@ -4,6 +4,8 @@
 command -v git >/dev/null 2>&1 ||\
 	{ echo >&2 "How are you even running this without git?"; exit 1; }
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # link vimrc
 if command -v vim >/dev/null 2>&1; then
 	echo "Linking vim configs"
@@ -12,19 +14,17 @@ if command -v vim >/dev/null 2>&1; then
 	fi
 	if [ -e ~/.vimrc ]; then
 		echo ".vimrc detected, save anything important and remove it"
-		exit 1
 	else
-		ln -s vimrc ~/.vimrc
+		ln -s $DIR/vimrc ~/.vimrc
 	fi
 	if [ -e ~/.vimrc.bundles ]; then
 		echo ".vimrc.bundles detected, save anything important and remove it"
-		exit 1
 	else
-		ln -s vimrc.bundles ~/.vimrc.bundles
+		ln -s $DIR/vimrc.bundles ~/.vimrc.bundles
 	fi
 	cp vimrc.local ~/.vimrc.local
 	cp vimrc.bundles.local ~/.vimrc.bundles.local
-	vim -c "PluginInstall" -c "q" -c "q"
+	vim -c "PluginInstall!" -c "q" -c "q"
 else
 	echo "vim not found, install it to configure"
 fi
@@ -34,9 +34,8 @@ if command -v tmux >/dev/null 2>&1; then
 	echo "Linking tmux config"
 	if [ -e ~/.tmux.conf ]; then
 		echo ".tmux.conf detected, save anything important and remove it"
-		exit 1
 	else
-		ln -s tmux.conf ~/.tmux.conf
+		ln -s $DIR/tmux.conf ~/.tmux.conf
 	fi
 else
 	echo "tmux not found, install it to configure"
@@ -50,9 +49,8 @@ if command -v zsh >/dev/null 2>&1; then
 	fi
 	if [ -e ~/.zshrc ]; then
 		echo ".zshrc detected, save anything important and remove it"
-		exit 1
 	else
-		ln -s zshrc ~/.zshrc
+		ln -s $DIR/zshrc ~/.zshrc
 	fi
 	cp zshrc.local ~/.zshrc.local
 else
