@@ -19,6 +19,7 @@ Plugin 'vim-scripts/Align'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'rgarver/Kwbd.vim'
+Plugin 'altercation/vim-colors-solarized'
 
 " External tool integration
 Plugin 'xaviershay/tslime.vim'
@@ -29,11 +30,13 @@ Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-bundler'
 Plugin 'tpope/vim-rails'
 Plugin 'vim-scripts/greplace.vim'
+Plugin 'christoomey/vim-tmux-navigator'
 
 " Language support
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
 Plugin 'slim-template/vim-slim'
 Plugin 'vim-ruby/vim-ruby'

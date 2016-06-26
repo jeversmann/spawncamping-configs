@@ -42,7 +42,6 @@ set backupcopy=yes           " see :help crontab
 set clipboard=unnamed        " yank and paste with the system clipboard
 set directory-=.             " don't store swapfiles in the current directory
 set encoding=utf-8
-set expandtab                " expand tabs to spaces
 set ignorecase               " case-insensitive search
 set incsearch                " search as you type
 set laststatus=2             " always show statusline
@@ -53,11 +52,10 @@ set hlsearch                 " highlight search
 set ruler                    " show where you are
 set scrolloff=3              " show context above/below cursorline
 set nocursorline             " don't highlight current line
-set shiftwidth=2             " normal mode indentation commands use 2 spaces
 set showcmd
 set smartcase                " case-sensitive search if any caps
-set softtabstop=2            " insert mode tab and backspace use 2 spaces
-set tabstop=8                " actual tabs occupy 8 characters
+set tabstop=4                " actual tabs occupy 4 characters
+set shiftwidth=4             " prevents me from using multiple tabs at a time
 set wildignore=log/**,node_modules/**,target/**,tmp/**,*.rbc
 set wildmode=longest,list,full
 set wildmenu                 " show a navigable menu for tab completion
@@ -70,17 +68,16 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 map <leader>l :Align
 map <silent> <leader>V :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
-nmap <leader>a :Ag<space>
-nmap <leader>b :CtrlPBuffer<CR>
-nmap <leader>d :NERDTreeToggle<CR>
-nmap <leader>f :NERDTreeFind<CR>
-nmap <leader>s :TSlime<space>
-nmap <leader>t :CtrlP<CR>
-nmap <leader>k :Kwbd<CR>
-nmap <leader>T :CtrlPClearCache<CR>:CtrlP<CR>
-nmap <leader>] :TagbarToggle<CR>
-nmap <leader><space> :call whitespace#strip_trailing()<CR>
-nmap <leader>g :GitGutterToggle<CR>
+nnoremap <leader>a :Ag<space>
+nnoremap <leader>b :CtrlPBuffer<CR>
+nnoremap <leader>d :NERDTreeToggle<CR>
+nnoremap <leader>f :NERDTreeFind<CR>
+nnoremap <leader>t :CtrlP<CR>
+nnoremap <leader>k :Kwbd<CR>
+nnoremap <leader>T :CtrlPClearCache<CR>:CtrlP<CR>
+nnoremap <leader>] :TagbarToggle<CR>
+nnoremap <leader><space> :call whitespace#strip_trailing()<CR>
+nnoremap <leader>g :GitGutterToggle<CR>
 " unhighlight everything
 nmap <leader>h :let @/ = ""<CR>
 " don't copy the contents of an overwritten selection.
@@ -91,13 +88,15 @@ inoremap jj <ESC>
 " automatically rebalance windows on vim resize
 autocmd VimResized * :wincmd =
 
+command! -bang W try | wq | catch /more file/ | wn | endt
+command! -bang Q q
+
 " --- Plugin Settings ---
 let g:ctrlp_match_window = 'order:ttb,max:20'
 let g:NERDSpaceDelims=1
 let g:gitgutter_enabled = 0
 if executable('ag')
   " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
-  let g:ackprg = 'ag --nogroup --column'
   set grepprg=ag\ --nogroup\ --nocolor
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
@@ -122,10 +121,12 @@ command! -nargs=0 RemoveConflictingAlignMaps call s:RemoveConflictingAlignMaps()
 silent! autocmd VimEnter * RemoveConflictingAlignMaps
 
 " gui settings
-colorscheme slate
+colorscheme desert
 
-if &diff
- " extra settings to make things better to see
+if (&t_Co == 256 || has('gui_running'))
+  if ($TERM_PROGRAM == 'iTerm.app')
+    colorscheme solarized
+  endif
 endif
 
 source ~/.vimrc.local
