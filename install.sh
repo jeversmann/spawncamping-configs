@@ -25,7 +25,7 @@ if command -v vim >/dev/null 2>&1; then
 	fi
 	cp vimrc.local ~/.vimrc.local
 	cp vimrc.bundles.local ~/.vimrc.bundles.local
-	vim -c "PluginInstall!" -c "q" -c "q"
+	vim +PluginInstall +qall >/dev/null 2&>/dev/null
 else
 	echo "vim not found, install it to configure"
 fi
