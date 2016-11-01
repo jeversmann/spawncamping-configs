@@ -13,7 +13,6 @@ plugins=(git)
 # User configuration
 
 export EDITOR='vim'
-export PAGER='vim'
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # Aliases
@@ -24,13 +23,21 @@ alias ss="bundle exec rails server"
 
 alias gs="git status"
 alias ga="git add"
+alias gap="git add --patch"
+alias gd="git diff"
+alias gc="git checkout"
+alias gp="git pull"
+alias gdc="git diff --cached"
 alias gcm="git commit -m"
 alias gcam="git commit -am"
 alias gcaa="git commit -a --amend"
+gpu () { git push -u origin `git rev-parse --abbrev-ref HEAD` }
 
 alias l="ls -ltrh"
 alias la="ls -ltrAh"
 alias q="exit"
+
+alias psg="ps -ef | grep "
 
 # Extra path lines
 

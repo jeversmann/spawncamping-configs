@@ -38,6 +38,7 @@ if command -v tmux >/dev/null 2>&1; then
 	else
 		ln -s $DIR/tmux.conf ~/.tmux.conf
 	fi
+	cp tmux.conf.local ~/.tmux.conf.local
 else
 	echo "tmux not found, install it to configure"
 fi

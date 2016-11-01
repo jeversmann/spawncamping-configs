@@ -1,1 +1,10 @@
 # Add your machine-specific tmux config here
+
+# If you want a different color for windows on this machine, uncomment one
+# set-option -g status-bg red
+# set-option -g status-bg green
+# set-option -g status-bg yellow
+# set-option -g status-bg blue
+# set-option -g status-bg magenta
+# set-option -g status-bg cyan
+# set-option -g status-bg white

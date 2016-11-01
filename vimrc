@@ -27,6 +27,9 @@ set ff=unix
 autocmd BufRead,BufNewFile *.fdoc set filetype=yaml
 " md is markdown
 autocmd BufRead,BufNewFile *.md set filetype=markdown
+" SQL templating
+autocmd BufRead,BufNewFile *.swigql set filetype=sql
+autocmd BufRead,BufNewFile *.sql.jinja set filetype=sql
 " some things to keep latex pretty
 autocmd Filetype tex setlocal spell spelllang=en_us textwidth=79 formatoptions+=t
 
@@ -50,7 +53,7 @@ set listchars=tab:▸\ ,trail:▫
 set number                   " show line numbers
 set hlsearch                 " highlight search
 set ruler                    " show where you are
-set scrolloff=3              " show context above/below cursorline
+set scrolloff=5              " show context above/below cursorline
 set nocursorline             " don't highlight current line
 set showcmd
 set smartcase                " case-sensitive search if any caps
@@ -78,8 +81,9 @@ nnoremap <leader>T :CtrlPClearCache<CR>:CtrlP<CR>
 nnoremap <leader>] :TagbarToggle<CR>
 nnoremap <leader><space> :call whitespace#strip_trailing()<CR>
 nnoremap <leader>g :GitGutterToggle<CR>
+nnoremap <leader>j %!python -mjson.tool<CR>
 " unhighlight everything
-nmap <leader>h :let @/ = ""<CR>
+nnoremap <leader>h :let @/ = ""<CR>
 " don't copy the contents of an overwritten selection.
 vnoremap p "_dP
 " in case you forgot to sudo
@@ -94,7 +98,15 @@ command! -bang Q q
 " --- Plugin Settings ---
 let g:ctrlp_match_window = 'order:ttb,max:20'
 let g:NERDSpaceDelims=1
+let NERDTreeIgnore = ['\.pyc$']
 let g:gitgutter_enabled = 0
+let g:jsx_ext_required = 0
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 if executable('ag')
   " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
   set grepprg=ag\ --nogroup\ --nocolor
@@ -121,12 +133,13 @@ command! -nargs=0 RemoveConflictingAlignMaps call s:RemoveConflictingAlignMaps()
 silent! autocmd VimEnter * RemoveConflictingAlignMaps
 
 " gui settings
-colorscheme desert
+colorscheme slate
+set guioptions=gm
 
-if (&t_Co == 256 || has('gui_running'))
-  if ($TERM_PROGRAM == 'iTerm.app')
-    colorscheme solarized
-  endif
+if ($TERM_PROGRAM == 'iTerm.app')
+	colorscheme solarized
 endif
+
+highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
 
 source ~/.vimrc.local
