@@ -9,7 +9,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # link vimrc
 if command -v vim >/dev/null 2>&1; then
 	echo "Linking vim configs"
-	mkdir -p ~/.vim/bundle
+	ln -s $DIR/vim ~/.vim
 	if [ ! -d ~/.vim/bundle/vundle ]; then
 		git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
 	fi

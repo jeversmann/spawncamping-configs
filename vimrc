@@ -30,6 +30,8 @@ autocmd BufRead,BufNewFile *.md set filetype=markdown
 " SQL templating
 autocmd BufRead,BufNewFile *.swigql set filetype=sql
 autocmd BufRead,BufNewFile *.sql.jinja set filetype=sql
+" JIRA ticket formatting
+autocmd BufRead,BufNewFile *.cw set filetype=confluencewiki
 " some things to keep latex pretty
 autocmd Filetype tex setlocal spell spelllang=en_us textwidth=79 formatoptions+=t
 
@@ -133,12 +135,8 @@ command! -nargs=0 RemoveConflictingAlignMaps call s:RemoveConflictingAlignMaps()
 silent! autocmd VimEnter * RemoveConflictingAlignMaps
 
 " gui settings
-colorscheme slate
+colorscheme Tomorrow-Night-Eighties
 set guioptions=gm
-
-if ($TERM_PROGRAM == 'iTerm.app')
-	colorscheme solarized
-endif
 
 highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
 
