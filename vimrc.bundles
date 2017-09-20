@@ -24,11 +24,11 @@ Plugin 'xaviershay/tslime.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'rking/ag.vim'
-Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-bundler'
 Plugin 'tpope/vim-rails'
 Plugin 'vim-scripts/greplace.vim'
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'w0rp/ale'
 
 " Language support
 Plugin 'kchmck/vim-coffee-script'

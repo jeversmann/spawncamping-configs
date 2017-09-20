@@ -64,6 +64,7 @@ set shiftwidth=4             " prevents me from using multiple tabs at a time
 set wildignore=log/**,node_modules/**,target/**,tmp/**,*.rbc
 set wildmode=longest,list,full
 set wildmenu                 " show a navigable menu for tab completion
+set vb                       " disable bells
 
 " --- keyboard shortcuts ---
 let mapleader = ','
@@ -84,6 +85,8 @@ nnoremap <leader>] :TagbarToggle<CR>
 nnoremap <leader><space> :call whitespace#strip_trailing()<CR>
 nnoremap <leader>g :GitGutterToggle<CR>
 nnoremap <leader>j %!python -mjson.tool<CR>
+nnoremap <leader>E :ALEPreviousWrap<CR>
+nnoremap <leader>e :ALENextWrap<CR>
 " unhighlight everything
 nnoremap <leader>h :let @/ = ""<CR>
 " don't copy the contents of an overwritten selection.
@@ -103,11 +106,6 @@ let g:NERDSpaceDelims=1
 let NERDTreeIgnore = ['\.pyc$']
 let g:gitgutter_enabled = 0
 let g:jsx_ext_required = 0
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
 
 if executable('ag')
   " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
